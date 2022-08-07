@@ -1,11 +1,21 @@
+const weatherFunc=require('./utils/weather-api');
+const geoCoding=require('./utils/geocoding-api');
 
-const axios = require('axios')
-axios.get('https://geocode.maps.co/search?q=toronto')
-.then((res)=>{
-    // console.log(res.data[0].lat,res.data[0].lon);
-axios.get(`http://api.weatherstack.com/current?access_key=37df30cafde4731f312e687232100897&query=${res.data[0].lat},${res.data[0].lon}`)
-.then((res)=>{
-    // console.log(res.data.current.temperature,res.data.current.feelslike);
-    console.log(`It is currently ${res.data.current.temperature} degress out. It feels like ${res.data.current.feelslike} degress out`);
-})
+
+const location='mumbai';
+geoCoding(location,(response,error)=>{
+    if(response===undefined){
+        console.log(error);
+        return;
+    }
+    const latitude=response[0].lat;
+    const longitude=response[0].lon;
+    
+    weatherFunc(latitude,longitude,(res,err)=>{
+        if(res===undefined){
+            console.log(err);
+            return;
+        }
+        console.log(`It is currently ${res.current.temperature} degress out. It feels like ${res.current.feelslike} degress out`);
+    })
 })
