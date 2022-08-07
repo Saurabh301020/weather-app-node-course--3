@@ -1,3 +1,5 @@
+const weatherFunc=require('./utils/weather-api');
+const geoCoding=require('./utils/geocoding-api');
 const express=require('express')
 const app=express()
 
@@ -8,10 +10,28 @@ app.get('/weather',(req,res)=>{
             error:'there is no query string for address!'
         })
     }
-
-    res.send({
-        address:req.query.address
+    geoCoding(req.query.address,(response,error)=>{
+        if(response===undefined){
+            res.send({error:error})
+            return
+        }
+        const latitude=response[0].lat;
+        const longitude=response[0].lon;
+        weatherFunc(latitude,longitude,(re,er)=>{
+            if(re===undefined){
+                res.send({error:er})
+                return
+            }
+            res.send({
+                currentTemp:re.current.temperature,
+                feelsTemp:re.current.feelslike
+            })
+        })
     })
+
+    // res.send({
+    //     address:req.query.address
+    // })
     
 })
 
