@@ -9,11 +9,12 @@ const viewPaths=path.join(__dirname,'/templates/views')
 const partialsPath=path.join(__dirname,'/templates/partials')
 const staticPath=path.join(__dirname,'/public')
 
-app.use(express.static(staticPath))
 
 app.set('view engine','hbs')
 app.set('views',viewPaths)
 hbs.registerPartials(partialsPath)
+
+app.use(express.static(staticPath))
 
 app.get('',(req,res)=>{
     res.render('index',{
@@ -21,9 +22,9 @@ app.get('',(req,res)=>{
         name:'Saurabh'
     })
 })
-app.get('',(req,res)=>{
-    res.send('this is from server!')
-})
+// app.get('',(req,res)=>{
+//     res.send('this is from server!')
+// })
 app.get('/about',(req,res)=>{
     res.render('about',{
         title:'About',
